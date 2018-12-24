@@ -29,51 +29,72 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
 @property(nonatomic,assign) BOOL isShow;
 
 @property(nonatomic,strong) UIBezierPath * previousPath;
+
+@property(nonatomic,assign) BOOL isAnimation;
+
 @end
 
 @implementation DeeSwitch
 
 - (instancetype)initWithFrame:(CGRect)frame {
+    //待测试
+    if (CGRectEqualToRect(frame,CGRectZero) || CGRectEqualToRect(frame , CGRectNull)) {
+        frame = CGRectMake(0, 0, 51, 31);
+    }
     if (self = [super initWithFrame:frame]) {
         self.layer.backgroundColor = [UIColor whiteColor].CGColor;
+        self.isShow = NO;
+        self.isAnimation = YES;
         //添加收拾监听
         [self configGesture];
+
         //添加图层
         [self configLayer];
     }
     return self;
 }
 
+#pragma mark - interface
+- (BOOL)on {
+    return self.isShow;
+}
+
+- (void)setOn:(BOOL)on animated:(BOOL)animated {
+    self.isShow = !on;
+    self.isAnimation = animated;
+    [self tapDownAction:nil];
+    [self tapUpAction:nil];
+}
 
 #pragma mark - EvenetRespond
 - (void)tapUpAction:(UIControl *)sender {
     if (self.isShow) { //ON
-        //backLayer UIColor(red:0.65, green:0.65, blue:0.65, alpha:1.00)
-        [self changeBacklayerColor:[UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1]
+        //backLayer
+        [self changeBacklayerColor:self.tintColor
                           duration:0.05
-                         animation:YES];
+                         animation:self.isAnimation];
 
         [self showFillLayer:self.isShow
                    duration:0.1
                       delay:0
-                  animation:YES];
+                  animation:self.isAnimation];
 
         //thumb layer
         [self makeThumblayerTransitionWithPath:[self calculateThumbTransitionPathWithState:k_Path_State_Off]
                                       duration:0.1
                                          delay:0
-                                     animation:YES];
+                                     animation:self.isAnimation];
     } else { //OFF
         //backLayer
-        [self changeBacklayerColor:[UIColor greenColor]
+        [self changeBacklayerColor:self.onTintColor
                           duration:0.1
-                         animation:YES];
+                         animation:self.isAnimation];
 
         //fillLayer
         [self makeThumblayerTransitionWithPath:[self calculateThumbTransitionPathWithState:k_Path_State_On]
                                       duration:0.15
                                          delay:0
-                                     animation:YES];
+                                     animation:self.isAnimation];
 
     }
     self.isShow ^= 1;
@@ -85,19 +106,20 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
         [self makeThumblayerTransitionWithPath:[self calculateThumbTransitionPathWithState:k_Path_State_Mid_On]
                                       duration:1
                                          delay:0
-                                     animation:YES];
+                                     animation:self.isAnimation];
     } else {
         //thumlayer
         [self makeThumblayerTransitionWithPath:[self calculateThumbTransitionPathWithState:k_Path_State_Mid_Off]
                                       duration:1
                                          delay:0
-                                     animation:YES];
+                                     animation:self.isAnimation];
         //filllayer
         [self showFillLayer:self.isShow
                    duration:0.1
                       delay:0.1
-                  animation:YES];
+                  animation:self.isAnimation];
     }
+
 }
 
 //fill layer
@@ -159,7 +181,7 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
 }
 
 //backlayerAnimation
-- (void)changeColorWithLayer:(CALayer *)layer
+- (void)changeColorWithLayer:(CAShapeLayer *)layer
                    color:(UIColor *)color
                 duration:(CGFloat)duration
                animation:(BOOL)animation {
@@ -171,11 +193,12 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
         colorAnimation.fillMode = kCAFillModeForwards;
         [layer addAnimation:colorAnimation forKey:@"colorAnimation"];
     } else {
-
+        [layer removeAllAnimations];
+        layer.fillColor = color.CGColor;
     }
 }
 //thumlayerAnimtion
-- (void)makeTransitonAnimaitonWithLayer:(CALayer *)layer
+- (void)makeTransitonAnimaitonWithLayer:(CAShapeLayer *)layer
                                    path:(UIBezierPath *)path
                                 duratin:(CGFloat)duration
                                   delay:(CGFloat)delay
@@ -190,6 +213,9 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
         pathAnimation.removedOnCompletion = NO;
         pathAnimation.fillMode = kCAFillModeForwards;
         [layer addAnimation:pathAnimation forKey:@"transition"];
+    } else {
+        [layer removeAllAnimations];
+        layer.path = path.CGPath;
     }
 
     if (animation) {
@@ -201,10 +227,12 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
         shadowAnimation.removedOnCompletion = NO;
         shadowAnimation.fillMode = kCAFillModeForwards;
         [layer addAnimation:shadowAnimation forKey:@"shadowTransition"];
+    } else {
+        layer.shadowPath = path.CGPath;
     }
 }
 
-- (void)borderColorAnimationWithLayer:(CALayer *)layer
+- (void)borderColorAnimationWithLayer:(CAShapeLayer *)layer
                                 color:(UIColor *)color
                              duration:(CGFloat)duration
                             animation:(BOOL)animation{
@@ -215,6 +243,9 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
         strokeAnimtion.removedOnCompletion = NO;
         strokeAnimtion.fillMode = kCAFillModeForwards;
         [layer addAnimation:strokeAnimtion forKey:@"strokeColor"];
+    } else {
+        [layer removeAllAnimations];
+        layer.strokeColor = color.CGColor;
     }
 }
 
@@ -227,20 +258,20 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
     CGFloat minDoubleWidth = contentBounds.size.width / 3.0 * 2;
     UIBezierPath *statePath;
     //四种状态的path
-    switch (state) {
+    switch (state) { //[00    ]
         case k_Path_State_Off: {
             statePath  = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, y, height, height) cornerRadius:height / 2.0];
         }
             break;
-        case k_Path_State_Mid_Off: {
+        case k_Path_State_Mid_Off: { // [0000  ]
             statePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, y, minDoubleWidth, height) cornerRadius:height / 2.0];
         }
             break;
-        case k_Path_State_Mid_On: {
+        case k_Path_State_Mid_On: { // [  0000]
             statePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(width - minDoubleWidth, y, minDoubleWidth, height) cornerRadius:height / 2.0];
         }
             break;
-        case k_Path_State_On: {
+        case k_Path_State_On: { // [  00]
             statePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(width - height, y, height, height) cornerRadius:height / 2.0];
         }
             break;
@@ -259,7 +290,7 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
     self.backLayer.path = path;
     self.backLayer.fillColor = [UIColor whiteColor].CGColor;
     [self.layer addSublayer:self.backLayer];
-    self.backLayer.strokeColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1].CGColor;
+    self.backLayer.strokeColor = self.isShow ? self.onTintColor.CGColor : self.tintColor.CGColor;
     self.backLayer.lineWidth = 8;
 
 
@@ -279,7 +310,7 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
     self.previousPath = roundPath;
     self.thumbLayer.path = roundPath.CGPath;
     self.thumbLayer.lineWidth = 1;
-    self.thumbLayer.fillColor = [UIColor whiteColor].CGColor;
+    self.thumbLayer.fillColor = self.thumbTintColor.CGColor;
 
     self.thumbLayer.shadowPath = roundPath.CGPath;
     self.thumbLayer.shadowColor = [UIColor lightGrayColor].CGColor;
@@ -292,6 +323,35 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
     [self addTarget:self action:@selector(tapUpAction:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
 
     [self addTarget:self action:@selector(tapDownAction:) forControlEvents:UIControlEventTouchDown];
+}
+
+#pragma mark - setterAndGetter
+- (UIColor *)onTintColor {
+    if (!_onTintColor) {
+        return [UIColor greenColor];
+    }
+    return _onTintColor;
+}
+
+- (UIColor *)tintColor {
+    if (!_tintColor) {
+        return [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1];
+    }
+    return _tintColor;
+}
+
+- (UIColor *)thumbTintColor {
+    if (!_thumbTintColor) {
+        return [UIColor whiteColor];
+    }
+    return _thumbTintColor;
+}
+
+- (UIColor *)backGroundColor {
+    if (!_backGroundColor) {
+        return [UIColor clearColor];
+    }
+    return _backGroundColor;
 }
 
 @end
