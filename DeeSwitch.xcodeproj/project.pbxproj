@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		933EEB9C21D07715009DEB46 /* DeePlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 933EEB9B21D07715009DEB46 /* DeePlayerManager.m */; };
+		933EEB9F21D07770009DEB46 /* sw1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 933EEB9E21D07770009DEB46 /* sw1.mp3 */; };
 		93FFB621208AE89B00EC1645 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FFB620208AE89B00EC1645 /* AppDelegate.m */; };
 		93FFB624208AE89B00EC1645 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FFB623208AE89B00EC1645 /* ViewController.m */; };
 		93FFB627208AE89B00EC1645 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93FFB625208AE89B00EC1645 /* Main.storyboard */; };
@@ -17,6 +19,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		933EEB9A21D07715009DEB46 /* DeePlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeePlayerManager.h; sourceTree = "<group>"; };
+		933EEB9B21D07715009DEB46 /* DeePlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeePlayerManager.m; sourceTree = "<group>"; };
+		933EEB9E21D07770009DEB46 /* sw1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sw1.mp3; sourceTree = "<group>"; };
 		93FFB61C208AE89B00EC1645 /* DeeSwitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeeSwitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93FFB61F208AE89B00EC1645 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		93FFB620208AE89B00EC1645 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -42,9 +47,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		933EEB9D21D0775D009DEB46 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				933EEB9E21D07770009DEB46 /* sw1.mp3 */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
 		93FFB613208AE89B00EC1645 = {
 			isa = PBXGroup;
 			children = (
+				933EEB9D21D0775D009DEB46 /* Source */,
 				93FFB61E208AE89B00EC1645 /* DeeSwitch */,
 				93FFB61D208AE89B00EC1645 /* Products */,
 			);
@@ -65,6 +79,8 @@
 				93FFB620208AE89B00EC1645 /* AppDelegate.m */,
 				93FFB622208AE89B00EC1645 /* ViewController.h */,
 				93FFB623208AE89B00EC1645 /* ViewController.m */,
+				933EEB9A21D07715009DEB46 /* DeePlayerManager.h */,
+				933EEB9B21D07715009DEB46 /* DeePlayerManager.m */,
 				93FFB635208AE8F700EC1645 /* DeeSwitch.h */,
 				93FFB636208AE8F700EC1645 /* DeeSwitch.m */,
 				93FFB625208AE89B00EC1645 /* Main.storyboard */,
@@ -134,6 +150,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				933EEB9F21D07770009DEB46 /* sw1.mp3 in Resources */,
 				93FFB62C208AE89B00EC1645 /* LaunchScreen.storyboard in Resources */,
 				93FFB629208AE89B00EC1645 /* Assets.xcassets in Resources */,
 				93FFB627208AE89B00EC1645 /* Main.storyboard in Resources */,
@@ -147,6 +164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				933EEB9C21D07715009DEB46 /* DeePlayerManager.m in Sources */,
 				93FFB624208AE89B00EC1645 /* ViewController.m in Sources */,
 				93FFB62F208AE89B00EC1645 /* main.m in Sources */,
 				93FFB637208AE8F700EC1645 /* DeeSwitch.m in Sources */,

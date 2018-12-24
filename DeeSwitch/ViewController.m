@@ -8,43 +8,48 @@
 
 #import "ViewController.h"
 #import "DeeSwitch.h"
+#import "DeePlayerManager.h"
 @interface ViewController ()
 @property(nonatomic,strong) DeeSwitch * sw;
 @end
 
 @implementation ViewController
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    // 预加载音效
+    [[DeePlayerManager shareInstance] prepareSound];
+    // 添加视图
     DeeSwitch *sw = [[DeeSwitch alloc] initWithFrame:CGRectMake(20.0, 129.0, 255.0, 155.0)];
     sw.center = self.view.center;
     self.sw = sw;
-    
     [self.view addSubview:sw];
+
+    // 添加事件监听
+    [self addEventListener];
+
 }
 
 - (void)viewWillLayoutSubviews {
     self.sw.center = self.view.center;
 }
 
-
-- (void)tapAction {
-    [UIView animateWithDuration:0.25 animations:^{
-        CGAffineTransform  locasl = CGAffineTransformMakeTranslation( 100,0);
-        self.sw.transform = locasl;
-    } completion:^(BOOL finished) {
-
-    }];
+#pragma mark - privateMethod
+- (void)addEventListener {
+    [self.sw addTarget:self action:@selector(tapUpAction) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    [self.sw addTarget:self action:@selector(tapDownAction) forControlEvents:UIControlEventTouchDown];
 }
 
-- (void)upAction {
-    [UIView animateWithDuration:0.25 animations:^{
-        CGAffineTransform  locasl = CGAffineTransformMakeTranslation( 0,100);
-        self.sw.transform = locasl;
-    } completion:^(BOOL finished) {
 
-    }];
+#pragma mark - eventRespond
+- (void)tapUpAction {
+    NSLog(@"%s",__func__);
 }
+
+- (void)tapDownAction {
+    NSLog(@"%s",__func__);
+}
+
 
 @end

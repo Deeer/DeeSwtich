@@ -8,6 +8,7 @@
 
 #import "DeeSwitch.h"
 
+#import "DeePlayerManager.h"
 typedef NS_ENUM(NSInteger, k_Path_State) {
     k_Path_State_Off,
     k_Path_State_Mid_Off,
@@ -50,6 +51,9 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
 
         //添加图层
         [self configLayer];
+
+        // 准备音频
+        [[DeePlayerManager shareInstance] prepareSound];
     }
     return self;
 }
@@ -97,6 +101,10 @@ typedef NS_ENUM(NSInteger, k_Path_State) {
                                      animation:self.isAnimation];
 
     }
+
+    // 准备音频文件
+    [[DeePlayerManager shareInstance] playSound];
+    // 
     self.isShow ^= 1;
 }
 
